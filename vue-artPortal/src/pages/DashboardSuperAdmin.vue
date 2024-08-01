@@ -105,72 +105,57 @@
       </section>
   
       <!-- Modal -->
-      <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl mx-auto p-6">
-          <!-- Modal header -->
-          <div class="flex items-start justify-between mb-4 border-b pb-2">
-            <h3 class="text-gray-900 text-xl lg:text-2xl font-semibold">
-              {{ modalTitle }}
-            </h3>
-            <button @click="closeModal" class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg p-1.5 inline-flex items-center">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-            </button>
+      <<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl mx-auto p-6">
+      <!-- Modal header -->
+      <div class="flex items-start justify-between mb-4 border-b pb-2">
+        <h3 class="text-gray-900 text-xl lg:text-2xl font-semibold">
+          {{ modalTitle }}
+        </h3>
+        <button @click="closeModal" class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg p-1.5 inline-flex items-center">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div>
+        <form @submit.prevent="handleSubmit">
+          <div class="mb-4">
+            <label for="adminName" class="block text-sm font-medium text-gray-700">Admin Name</label>
+            <input v-model="form.name" type="text" id="adminName" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
           </div>
-          <!-- Modal body -->
-          <div>
-            <form @submit.prevent="handleSubmit">
-              <!-- Conditional Form Fields -->
-              <div v-if="modalType === 'role'">
-                <div class="mb-4">
-                  <label for="roleName" class="block text-sm font-medium text-gray-700">Role Name</label>
-                  <input v-model="form.name" type="text" id="roleName" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                </div>
-                <div class="mb-4">
-                  <label for="roleGuard" class="block text-sm font-medium text-gray-700">Guard Name</label>
-                  <input v-model="form.guard" type="text" id="roleGuard" name="guard" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                </div>
-              </div>
-  
-              <div v-if="modalType === 'permission'">
-                <div class="mb-4">
-                  <label for="permissionName" class="block text-sm font-medium text-gray-700">Permission Name</label>
-                  <input v-model="form.name" type="text" id="permissionName" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                </div>
-                <div class="mb-4">
-                  <label for="permissionGuard" class="block text-sm font-medium text-gray-700">Guard Name</label>
-                  <input v-model="form.guard" type="text" id="permissionGuard" name="guard" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                </div>
-              </div>
-  
-              <div v-if="modalType === 'admins'">
-                <div class="mb-4">
-                  <label for="adminName" class="block text-sm font-medium text-gray-700">Admin Name</label>
-                  <input v-model="form.name" type="text" id="adminName" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                </div>
-                <div class="mb-4">
-                  <label for="adminEmail" class="block text-sm font-medium text-gray-700">Email</label>
-                  <input v-model="form.email" type="email" id="adminEmail" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                </div>
-                <div class="mb-4">
-                  <label class="block text-sm font-medium text-gray-700">Permissions</label>
-                  <div class="mt-2 space-y-2">
-                    <div v-for="permission in availablePermissions" :key="permission.id" class="flex items-center">
-                      <input type="checkbox" :id="'permission-' + permission.id" :value="permission.id" v-model="form.permissions" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                      <label :for="'permission-' + permission.id" class="ml-2 text-sm text-gray-600">{{ permission.name }}</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-  
-              <div class="flex items-center justify-end mt-4">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:ring-4 focus:ring-blue-300">Save</button>
-                <button @click="closeModal" type="button" class="ml-4 bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:ring-4 focus:ring-gray-300">Cancel</button>
-              </div>
-            </form>
+          <div class="mb-4">
+            <label for="adminEmail" class="block text-sm font-medium text-gray-700">Email</label>
+            <input v-model="form.email" type="email" id="adminEmail" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
           </div>
-        </div>
+          <div class="mb-4">
+            <label for="adminPassword" class="block text-sm font-medium text-gray-700">Password</label>
+            <input v-model="form.password" type="password" id="adminPassword" name="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          <div class="mb-4">
+            <label for="adminPasswordConfirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <input v-model="form.password_confirmation" type="password" id="adminPasswordConfirmation" name="password_confirmation" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Permissions</label>
+            <div class="mt-2 space-y-2">
+              <div v-for="permission in availablePermissions" :key="permission.id" class="flex items-center">
+                <input type="checkbox" :id="'permission-' + permission.id" :value="permission.name" v-model="form.permissions" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                <label :for="'permission-' + permission.id" class="ml-2 text-sm text-gray-600">{{ permission.name }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-end mt-4">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:ring-4 focus:ring-blue-300">Save</button>
+            <button @click="closeModal" type="button" class="ml-4 bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:ring-4 focus:ring-gray-300">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
+  </div>
+
   </template>
   
   <script>
@@ -186,7 +171,13 @@
           email: '',
           permissions: []
         },
-        availablePermissions: [] // Fetch available permissions dynamically
+         availablePermissions: [
+        { id: 1, name: 'add users' },
+        { id: 2, name: 'delete users' },
+        { id: 3, name: 'read users' },
+        { id: 3, name: 'read users' }
+        // Add other permissions here
+      ]
       };
     },
     methods: {

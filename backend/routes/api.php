@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 
 /*
@@ -31,3 +32,5 @@ Route::apiResource('roles', RoleController::class);
 Route::apiResource('permissions', PermissionController::class);
 // Admin Routes (for user management)
 Route::apiResource('admins', AdminController::class);
+// user Routes (for read uses all)
+Route::resource('users', UserController::class);

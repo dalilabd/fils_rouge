@@ -7,13 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserAdded;
 
-
-class AdminController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
         // Retrieve all users and return as JSON
-        $users = User::role('admin')->get();
+        $users = User::all();
         return response()->json($users);
     }
 
@@ -23,8 +22,6 @@ class AdminController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'permissions' => 'array', // Add this line for permissions
-            'permissions.*' => 'string|exists:permissions,name', // Ensure permissions exist
         ]);
 
         $user = User::create([
@@ -33,13 +30,8 @@ class AdminController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        // Assign role 'admin' to the newly created user
-        $user->assignRole('admin');
-
-        // Assign selected permissions to the user
-        if ($request->has('permissions')) {
-            $user->givePermissionTo($request->permissions);
-        }
+        // Assign role 'user' to the newly created user
+        $user->assignRole('user');
 
         // Send email (optional)
         // Mail::to($user->email)->send(new UserAdded($user));
